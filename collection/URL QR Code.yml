@@ -1,0 +1,21 @@
+info:
+  name: URL QR Code
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: "{{base}}/qrCode/save-qr"
+  body:
+    type: json
+    data: |-
+      {
+        "content":"https://www.youtube.com/"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
