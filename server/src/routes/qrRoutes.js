@@ -1,7 +1,10 @@
 import { Router } from "express";
 
 import QRCode from "qrcode";
-import { validateQRCodeInput } from "../middleware/validateQRCodeInput.js";
+import {
+  validateProductQRCodeInput,
+  validateQRCodeInput,
+} from "../middleware/validateQRCodeInput.js";
 
 const router = Router();
 
@@ -34,6 +37,32 @@ router.post("/save-qr", validateQRCodeInput, async (req, res) => {
         dark: "#fff",
       },
     });
+    res.status(200).json({ msg: "QR Code Saved" });
+  } catch (error) {
+    console.log(`Error: ${error}`);
+    res.status(500).json({ error: "Failed to generate QR Code" });
+  }
+});
+
+router.post("/product-qr", validateProductQRCodeInput, async (req, res) => {
+  const { prod_id, prod_name, prod_type, qrName } = req.body;
+  const productDetails = {
+    prod_id,
+    prod_name,
+    prod_type,
+  };
+  try {
+    const stringifiedData = JSON.stringify(productDetails);
+    const qrFile = await QRCode.toFile(
+      `../img/${qrName}.png`,
+      stringifiedData,
+      {
+        color: {
+          light: "#0000",
+          dark: "#fff",
+        },
+      },
+    );
     res.status(200).json({ msg: "QR Code Saved" });
   } catch (error) {
     console.log(`Error: ${error}`);
